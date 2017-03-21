@@ -1430,33 +1430,33 @@
 					if (!this.o.keyboardNavigation || this.o.daysOfWeekDisabled.length === 7)
 						break;
 					dir = e.keyCode === 37 || e.keyCode === 38 ? -1 : 1;
-          if (this.viewMode === 0) {
-  					if (e.ctrlKey){
-  						newViewDate = this.moveAvailableDate(focusDate, dir, 'moveYear');
+					if (this.viewMode === 0) {
+						if (e.ctrlKey){
+							newViewDate = this.moveAvailableDate(focusDate, dir, 'moveYear');
 
-  						if (newViewDate)
-  							this._trigger('changeYear', this.viewDate);
-  					} else if (e.shiftKey){
-  						newViewDate = this.moveAvailableDate(focusDate, dir, 'moveMonth');
+							if (newViewDate)
+								this._trigger('changeYear', this.viewDate);
+						} else if (e.shiftKey){
+							newViewDate = this.moveAvailableDate(focusDate, dir, 'moveMonth');
 
-  						if (newViewDate)
-  							this._trigger('changeMonth', this.viewDate);
-  					} else if (e.keyCode === 37 || e.keyCode === 39){
-  						newViewDate = this.moveAvailableDate(focusDate, dir, 'moveDay');
-  					} else if (!this.weekOfDateIsDisabled(focusDate)){
-  						newViewDate = this.moveAvailableDate(focusDate, dir, 'moveWeek');
-  					}
-          } else if (this.viewMode === 1) {
-            if (e.keyCode === 38 || e.keyCode === 40) {
-              dir = dir * 4;
-            }
-            newViewDate = this.moveAvailableDate(focusDate, dir, 'moveMonth');
-          } else if (this.viewMode === 2) {
-            if (e.keyCode === 38 || e.keyCode === 40) {
-              dir = dir * 4;
-            }
-            newViewDate = this.moveAvailableDate(focusDate, dir, 'moveYear');
-          }
+							if (newViewDate)
+								this._trigger('changeMonth', this.viewDate);
+						} else if (e.keyCode === 37 || e.keyCode === 39){
+							newViewDate = this.moveAvailableDate(focusDate, dir, 'moveDay');
+						} else if (!this.weekOfDateIsDisabled(focusDate)){
+							newViewDate = this.moveAvailableDate(focusDate, dir, 'moveWeek');
+						}
+					} else if (this.viewMode === 1) {
+						if (e.keyCode === 38 || e.keyCode === 40) {
+							dir = dir * 4;
+						}
+						newViewDate = this.moveAvailableDate(focusDate, dir, 'moveMonth');
+					} else if (this.viewMode === 2) {
+						if (e.keyCode === 38 || e.keyCode === 40) {
+							dir = dir * 4;
+						}
+						newViewDate = this.moveAvailableDate(focusDate, dir, 'moveYear');
+					}
 					if (newViewDate){
 						this.focusDate = this.viewDate = newViewDate;
 						this.setValue();
