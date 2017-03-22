@@ -1427,20 +1427,37 @@
 				case 38: // up
 				case 39: // right
 				case 40: // down
-					if (!this.o.keyboardNavigation || this.o.daysOfWeekDisabled.length === 7) {
+					if ((!this.o.keyboardNavigation
+						 || this.o.daysOfWeekDisabled.length === 7)
+						&& !(e.ctrlKey || e.shiftKey)) {
 						break;
 					}
+
+					//Stop propogation as soon as possible to not let other
+					//keyboard event handlers attached to the input consume
+					//this event even if can't change the date for some reason.
+					//TODO: is stopPropagation() needed here?
+					e.stopImmediatePropagation();
+					e.stopPropagation();
+					e.preventDefault();
 
 					dir = e.keyCode === 37 || e.keyCode === 38 ? -1 : 1;
 
 					if (this.viewMode === 0) {
-						if (e.ctrlKey) {
+						//Changing a year is currently disabled because we use
+						//ctrl modifier as a requirement for the
+						//keyboard navigation
+
+						//TODO: consider using ALT modifier or other
+						//      keys/combinations
+
+						/*if (e.ctrlKey) {
 							newViewDate = this.moveAvailableDate(focusDate, dir, 'moveYear');
 
 							if (newViewDate) {
 								this._trigger('changeYear', this.viewDate);
 							}
-						} else if (e.shiftKey) {
+						} else*/ if (e.shiftKey) {
 							newViewDate = this.moveAvailableDate(focusDate, dir, 'moveMonth');
 
 							if (newViewDate) {
@@ -1469,7 +1486,6 @@
 						this.focusDate = this.viewDate = newViewDate;
 						this.setValue();
 						this.fill();
-						e.preventDefault();
 					}
 
 					break;
