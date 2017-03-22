@@ -1275,7 +1275,7 @@
 				if (this.o.multidate === true || this.o.multidate > 1 || this.o.toggleActive){
 					this.dates.remove(ix);
 				}
-			} else if (this.o.multidate === false) {
+			} else if (!this.o.multidate) {
 				this.dates.clear();
 				this.dates.push(date);
 			}
