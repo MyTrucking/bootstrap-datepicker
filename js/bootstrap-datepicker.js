@@ -1250,7 +1250,7 @@
 					this._trigger('changeMonth', this.viewDate);
 				}
 			}
-			this._setDate(date);
+			this._setDate(date, undefined, e.ctrlKey);
 		},
 
 		// Clicked on prev or next
@@ -1265,17 +1265,17 @@
 			this.fill();
 		},
 
-		_toggle_multidate: function(date){
+		_toggle_multidate: function(date, multidate){
 			var ix = this.dates.contains(date);
 			if (!date){
 				this.dates.clear();
 			}
 
-			if (ix !== -1){
-				if (this.o.multidate === true || this.o.multidate > 1 || this.o.toggleActive){
+			if (ix !== -1 && multidate){
+				if (multidate === true || multidate > 1 || this.o.toggleActive){
 					this.dates.remove(ix);
 				}
-			} else if (!this.o.multidate) {
+			} else if (!multidate) {
 				this.dates.clear();
 				this.dates.push(date);
 			}
@@ -1283,14 +1283,16 @@
 				this.dates.push(date);
 			}
 
-			if (typeof this.o.multidate === 'number')
-				while (this.dates.length > this.o.multidate)
+			if (typeof multidate === 'number')
+				while (this.dates.length > multidate)
 					this.dates.remove(0);
 		},
 
-		_setDate: function(date, which){
+		_setDate: function(date, which, ctrlKey){
+			var multidate = this.o.multidate && ctrlKey;
+
 			if (!which || which === 'date')
-				this._toggle_multidate(date && new Date(date));
+				this._toggle_multidate(date && new Date(date), multidate);
 			if ((!which && this.o.updateViewDate) || which === 'view')
 				this.viewDate = date && new Date(date);
 
@@ -1300,7 +1302,7 @@
 				this._trigger('changeDate');
 			}
 			this.inputField.trigger('change');
-			if (this.o.autoclose && (!which || which === 'date')){
+			if (this.o.autoclose && (!which || which === 'date') && !multidate){
 				this.hide();
 			}
 		},
@@ -1429,7 +1431,7 @@
 				case 40: // down
 					if ((!this.o.keyboardNavigation
 						 || this.o.daysOfWeekDisabled.length === 7)
-						&& !(e.ctrlKey || e.shiftKey)) {
+						|| !(e.ctrlKey || e.shiftKey)) {
 						break;
 					}
 
@@ -1492,9 +1494,15 @@
 				case 13: // enter
 					if (!this.o.forceParse)
 						break;
+
+					var multidate = this.o.multidate && e.ctrlKey;
+					if (multidate) {
+						e.stopImmediatePropagation();
+					}
+
 					focusDate = this.focusDate || this.dates.get(-1) || this.viewDate;
 					if (this.o.keyboardNavigation) {
-						this._toggle_multidate(focusDate);
+						this._toggle_multidate(focusDate, multidate);
 						dateChanged = true;
 					}
 					this.focusDate = null;
@@ -1504,7 +1512,7 @@
 					if (this.picker.is(':visible')){
 						e.preventDefault();
 						e.stopPropagation();
-						if (this.o.autoclose)
+						if (this.o.autoclose && !multidate)
 							this.hide();
 					}
 					break;
