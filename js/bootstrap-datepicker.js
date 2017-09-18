@@ -1250,7 +1250,7 @@
 					this._trigger('changeMonth', this.viewDate);
 				}
 			}
-			this._setDate(date, undefined, e.ctrlKey);
+			this._setDate(date, undefined, e.ctrlKey || e.metaKey);
 		},
 
 		// Clicked on prev or next
@@ -1431,7 +1431,7 @@
 				case 40: // down
 					if ((!this.o.keyboardNavigation
 						 || this.o.daysOfWeekDisabled.length === 7)
-						|| !(e.ctrlKey || e.shiftKey)) {
+						|| !(e.ctrlKey || e.shiftKey || e.metaKey)) {
 						break;
 					}
 
@@ -1495,7 +1495,7 @@
 					if (!this.o.forceParse)
 						break;
 
-					var multidate = this.o.multidate && e.ctrlKey;
+					var multidate = this.o.multidate && (e.ctrlKey || e.metaKey);
 					if (multidate) {
 						e.stopImmediatePropagation();
 					}
